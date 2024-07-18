@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>API_KEY</key>
+    <string>AIzaSyD05IlCTVfsKGToQ2C0xJVNS4tDRsb0WEc</string>
+    <key>GCM_SENDER_ID</key>
+    <string>655970859351</string>
+    <key>PLIST_VERSION</key>
+    <string>1</string>
+    <key>BUNDLE_ID</key>
+    <string>AlessandroEscobar.Cap2IOSProject</string>
+    <key>PROJECT_ID</key>
+    <string>capstone2iosproject</string>
+    <key>STORAGE_BUCKET</key>
+    <string>capstone2iosproject.appspot.com</string>
+    <key>IS_ADS_ENABLED</key>
+    <false/>
+    <key>IS_ANALYTICS_ENABLED</key>
+    <false/>
+    <key>IS_APPINVITE_ENABLED</key>
+    <true/>
+    <key>IS_GCM_ENABLED</key>
+    <true/>
+    <key>IS_SIGNIN_ENABLED</key>
+    <true/>
+    <key>GOOGLE_APP_ID</key>
+    <string>1:655970859351:ios:40d868eff769c2b4a16612</string>
+    <key>DATABASE_URL</key>
+    <string>https://capstone2iosproject-default-rtdb.firebaseio.com/</string>
+</dict>
+</plist>
