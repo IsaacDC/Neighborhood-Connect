@@ -1,0 +1,188 @@
+//
+//  createGcView.swift
+//  Cap2IOSProject
+//
+//  Created by Alessandro Escobar on 7/11/24.
+//
+
+import SwiftUI
+import FirebaseDatabase
+import FirebaseAuth
+
+struct createGcView: View {
+    @State private var groupName: String = ""
+    @State private var selectedAgeRange: String = "18-25"
+    @State private var zipCode: String = ""
+    @State private var errorMessage: String = ""
+    @State private var successMessage: String = ""
+
+    let ageRanges = ["18-25", "26-35", "36-45", "46-55", "56+"]
+
+    var body: some View {
+        VStack {
+            HStack {
+                
+                
+                Spacer()
+                Text("Create Group")
+                    .font(.headline)
+                    
+                    .padding()
+                Spacer()
+            }
+            .padding(.top, 50) // Adjust the top padding as needed
+            .padding(.horizontal)
+
+            Spacer().frame(height: 20)
+            Image("Designer (1)")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 200, height: 200)
+            Spacer().frame(height: 80)
+
+            // Group Name Input Field
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Group Name")
+                    .font(Font.custom("Inter", size: 24))
+                    .foregroundColor(.black)
+                    .opacity(0.50)
+                TextField("Enter group name", text: $groupName)
+                    .padding()
+                    .background(Color(red: 0.93, green: 0.93, blue: 0.93))
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.black.opacity(0.25), lineWidth: 0.5)
+                    )
+            }
+            .padding(.horizontal, 15)
+            .frame(width: 360, height: 60)
+
+            Spacer().frame(height: 30)
+
+            // Age Range Picker
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Age Range")
+                    .font(Font.custom("Inter", size: 24))
+                    .foregroundColor(.black)
+                    .opacity(0.50)
+                Picker("Select Age Range", selection: $selectedAgeRange) {
+                    ForEach(ageRanges, id: \.self) {
+                        Text($0)
+                    }
+                }
+                .pickerStyle(WheelPickerStyle())
+                .frame(height: 60)
+                .clipped()
+                .background(Color(red: 0.93, green: 0.93, blue: 0.93))
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.black.opacity(0.25), lineWidth: 0.5)
+                )
+            }
+            .padding(.horizontal, 15)
+            .frame(width: 360)
+
+            Spacer().frame(height: 30)
+
+            // Zip Code Input Field
+            VStack(alignment: .leading, spacing: 5) {
+                Text("ZIP Code")
+                    .font(Font.custom("Inter", size: 24))
+                    .foregroundColor(.black)
+                    .opacity(0.50)
+                TextField("Enter ZIP code", text: $zipCode)
+                    .padding()
+                    .background(Color(red: 0.93, green: 0.93, blue: 0.93))
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.black.opacity(0.25), lineWidth: 0.5)
+                    )
+            }
+            .padding(.horizontal, 15)
+            .frame(width: 360, height: 60)
+
+            Spacer().frame(height: 20)
+
+            // Create Group Button
+            Button(action: {
+                createGroupChat()
+            }) {
+                Text("Create Group")
+                    .font(Font.custom("Inter", size: 24).weight(.medium))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.green)
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.black.opacity(0.25), lineWidth: 0.5)
+                    )
+            }
+            .padding(.horizontal, 15)
+            .frame(width: 360, height: 60)
+
+            Spacer().frame(height: 20)
+
+            // Error or Success message
+            if !errorMessage.isEmpty {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            }
+
+            if !successMessage.isEmpty {
+                Text(successMessage)
+                    .foregroundColor(.green)
+                    .padding()
+            }
+
+            Spacer()
+        }
+        .background(Color.white)
+        .edgesIgnoringSafeArea(.all)
+    }
+
+    private func createGroupChat() {
+        guard !groupName.isEmpty, !zipCode.isEmpty else {
+            errorMessage = "All fields are required."
+            return
+        }
+
+        guard let user = Auth.auth().currentUser else {
+            errorMessage = "User not authenticated."
+            return
+        }
+
+        let ref = Database.database().reference()
+        let groupData: [String: Any] = [
+            "groupName": groupName,
+            "ageRange": selectedAgeRange,
+            "zipCode": zipCode,
+            "users": [user.email!],
+            "creatorEmail": user.email!,
+            "timestamp": ServerValue.timestamp()
+        ]
+
+        ref.child("groupChats").childByAutoId().setValue(groupData) { error, _ in
+            if let error = error {
+                errorMessage = error.localizedDescription
+            } else {
+                successMessage = "Group chat created successfully!"
+                groupName = ""
+                zipCode = ""
+            }
+        }
+    }
+}
+
+struct SearchView_Previews: PreviewProvider {
+    static var previews: some View {
+        createGcView()
+            .previewDevice(PreviewDevice(rawValue: "iPhone 15 Pro"))
+            .environment(\.colorScheme, .light)
+    }
+}
