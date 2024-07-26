@@ -7,8 +7,7 @@
 
 import SwiftUI
 import FirebaseDatabase
-
-
+import FirebaseAuth
 
 struct chatView: View {
     var groupChat: GroupChat
@@ -18,7 +17,12 @@ struct chatView: View {
     var body: some View {
         VStack {
             List(messages) { message in
-                Text(message.text)
+                VStack(alignment: .leading) {
+                    Text(message.userID)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    Text(message.text)
+                }
             }
 
             HStack {
@@ -49,10 +53,10 @@ struct chatView: View {
     }
 
     private func sendMessage() {
-        guard !messageText.isEmpty else { return }
+        guard !messageText.isEmpty, let currentUserEmail = Auth.auth().currentUser?.email else { return }
         
         let ref = Database.database().reference().child("groupChats/\(groupChat.id)/messages").childByAutoId()
-        let message = Message(id: ref.key ?? UUID().uuidString, text: messageText)
+        let message = Message(id: ref.key ?? UUID().uuidString, text: messageText, userID: currentUserEmail)
         ref.setValue(message.toAnyObject())
         messageText = ""
     }
@@ -67,25 +71,32 @@ struct ChatView_Previews: PreviewProvider {
 struct Message: Identifiable {
     var id: String
     var text: String
+    var userID: String
 
-    init(id: String, text: String) {
+    init(id: String, text: String, userID: String) {
         self.id = id
         self.text = text
+        self.userID = userID
     }
 
     init?(snapshot: DataSnapshot) {
         guard let value = snapshot.value as? [String: Any],
-              let text = value["text"] as? String else {
+              let text = value["text"] as? String,
+              let userID = value["userID"] as? String else {
             return nil
         }
 
         self.id = snapshot.key
         self.text = text
+        self.userID = userID
     }
 
     func toAnyObject() -> Any {
         return [
-            "text": text
+            "text": text,
+            "userID": userID
         ]
     }
 }
+
+
