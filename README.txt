@@ -34,6 +34,8 @@ SignUpForEventView.swift: Lists available events for the user to sign up for and
 
 UserEventsView.swift: Displays events that the user is signed up for and allows them to unsubscribe from events.
 
+EventDetailsView.swift: Shows all the details of the event, includes a map showing location where event is taking place.
+
 
 2. Models
 This directory contains data models used in the application, including those for handling data from Firebase.
