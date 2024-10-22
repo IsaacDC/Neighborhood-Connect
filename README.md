@@ -10,6 +10,8 @@
 ## Overview  
 The **Neighborhood Watch Application** aims to connect people within their neighborhood, allowing users to host and join local events, fostering a stronger sense of community.
 
+[![Neighborhood Watch Application Video](https://img.youtube.com/vi/lZNvM-Tn-nQ/0.jpg)](https://www.youtube.com/watch?v=lZNvM-Tn-nQ&ab_channel=andydelgado)
+
 ---
 
 ## Directory Structure of **Neighborhood Connect**
